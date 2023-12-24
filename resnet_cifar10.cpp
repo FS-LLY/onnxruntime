@@ -5,8 +5,10 @@
 #include <filesystem>
 #include <iostream>
 #include <regex>
+#include <chrono>   
 
 namespace fs = std::filesystem;
+using namespace chrono;
 int main()
 {
     Ort::Env env;
@@ -37,6 +39,7 @@ int main()
     std::string folderPath = "/dataset/cifar-10-batches-py/test/";
     int num = 0;
     int correct_num = 0;
+    auto start = system_clock::now();
     for (const auto &entry : fs::directory_iterator(folderPath))
     {
         std::string imgPath = entry.path().string();
@@ -149,10 +152,13 @@ int main()
         }
     }
     if (num > 0)
-    {
+    {   
+        auto end   = system_clock::now();
+        auto duration = duration_cast<microseconds>(end - start);
         std::cout << "Total pictures: " << num << std::endl;
         std::cout << "Correct pictures: " << correct_num << std::endl;
         std::cout << "acc: " << (float)correct_num / (float)num << std::endl;
+        std::cout << "time cost: "<<double(duration.count()) * microseconds::period::num / microseconds::period::den <<" s "<<std::endl;
     }
     // std::string imgPath = "/dataset/cifar-10-batches-py/test/0_4387.jpg";
     // cv::Mat img = cv::imread(imgPath);
