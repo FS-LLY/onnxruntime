@@ -14,9 +14,14 @@ export LD_LIBRARY_PATH=/data/ONNX/onnxruntime-linux-x64-gpu-1.12.0/lib:$LD_LIBRA
 # Result
 
 ## Resnet (cifar-10)
+
 Official Dataset :81.96%
+
 onnxruntime_python: 81.96%
+
 onnxruntime_c++ :82.00% 
-In Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz : 70.9374 s
-In Respberry Pi 5 (Aarch64 version) :5 67.451s
+
+In Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) : 70.9374 s
+
+In Respberry Pi 5 (linux_Aarch64_v1.16.3) : 567.451s
 
