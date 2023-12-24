@@ -1,3 +1,12 @@
+# Rasberry
+
+Buy a mini_HDMI - HDMI line: https://m.tb.cn/h.5ndT8Ir?tk=QkygWgtvV2O
+
+OS install: https://www.raspberrypi.com/software/
+
+See the tutorial for more detail 
+
+
 # onnxruntime
 
 ## Install
