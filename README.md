@@ -1,20 +1,118 @@
+# Training and export ONNX model
+
+Only need pytorch environment
+
+## VGG16  (Celeba) 
+
+Need: VGG16_model.py  and VGG16_train.py
+
+Train:
+```
+python VGG16_train.py
+```
+Model input size: (128,3, 128, 128)
+
+Output size: (128,2)
+
+## Resnet 
+Need: resnet_model.py  and corresponding .py file for different dataset
+
+### cifar-10
+Train:
+```
+python resnet_train_cifar10_single.py
+```
+Model input size: (1,3, 224, 224)
+
+Output size: (1,10)
+### cifar-100
+Train:
+```
+python resnet_train_cifar100.py
+```
+Model input size: (128,3, 224, 224)
+
+Output size: (128,10)
+
+### catanddog
+Downloading data in feishu group chat.
+
+Train:
+```
+python resnet_train_catanddog.py
+```
+Model input size: (128,3, 224, 224)
+
+Output size: (128,2)
+
+### 102flower
+
+Train:
+```
+python resnet_train_102flower.py
+```
+Model input size: (128,3, 224, 224)
+
+Output size: (128,103) (Additional type for non-flower)
+
+# Running ONNX model in python
+
+## Install
+
+```
+pip install onnxruntime (cpu version)
+pip install onnxruntime-gpu (cpu+gpu version)
+```
+
+## Running
+```
+python VGG16_onnx_test.py (VGG16 + celeba dataset)
+python resnet_onnx.py (Resnet18 + cifar-10)
+```
+
 # Rasberry
 
 Buy a mini_HDMI - HDMI line: https://m.tb.cn/h.5ndT8Ir?tk=QkygWgtvV2O
 
-OS install: https://www.raspberrypi.com/software/
+Prepare a display, keybroad, mouse, a SD Card and a SD Card reader.
 
-See the tutorial for more detail 
+Downloading software and tutorial: https://www.yahboom.com/study/raspberry4B Password: nvz8
+
+OS install: https://www.raspberrypi.com/software/ 
+
+Please select your device, 64-bit OS and the drive letter of the SD card, and wait for the install.
+
+If your device is rasberry 4B, you could try to install the OS in package (.img files)
+
+Insering SD card, connecting Rasberry to power, display, keyboard and mouse (see the picture in tutorial) 
+
+For ssh connection, vnc viewer, file translation and so on, read official tutorial for more details. 
 
 
-# onnxruntime
+# onnxruntime in c++
 
-## Install
+## Install library
 Opencv 
 ```
 apt install libopencv-dev  
 ```
+
+Config where your header file and lib file installed. Normally it should in /usr/local/lib
+
 onnxruntime: https://github.com/microsoft/onnxruntime/releases/tag/v1.16.3
+
+Download x64 version for Ubuntu 20.04, aarch64 version for Rasberry
+
+Just extract the package 
+
+## Data process
+
+### Cifar-10
+```
+python cifar10.py
+```
+
+Updating other datasets ...
 
 ## Compile
 ```
@@ -24,6 +122,7 @@ g++ resnet_cifar10.cpp -o test  -I /data/ONNX/onnxruntime-linux-x64-gpu-1.12.0/i
 ## Excute
 ```
 export LD_LIBRARY_PATH=/data/ONNX/onnxruntime-linux-x64-gpu-1.12.0/lib:$LD_LIBRARY_PATH
+./test
 ```
 # Result
 
