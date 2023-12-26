@@ -80,13 +80,20 @@ Downloading software and tutorial: https://www.yahboom.com/study/raspberry4B Pas
 
 OS install: https://www.raspberrypi.com/software/ 
 
-Please select your device, 64-bit OS and the drive letter of the SD card, and wait for the install.
+Please select your device, 64-bit OS and the drive letter of the SD card, and wait for write-in.
 
 If your device is rasberry 4B, you could try to install the OS in package (.img files)
 
 Insering SD card, connecting Rasberry to power, display, keyboard and mouse (see the picture in tutorial) 
 
-For ssh connection, vnc viewer, file translation and so on, read official tutorial for more details. 
+Connect your resberry to wifi. And enter
+```
+ifconfig
+```
+
+to get IP address. Then you could connect it with ssh and VNC viewer.
+
+For SSH connection, VNC viewer, file translation and so on, read official tutorial for more details. 
 
 
 # onnxruntime in c++
