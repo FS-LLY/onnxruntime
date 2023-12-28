@@ -8,7 +8,7 @@
 #include <chrono>   
 
 namespace fs = std::filesystem;
-using namespace chrono;
+using namespace std::chrono;
 int main()
 {
     Ort::Env env;
