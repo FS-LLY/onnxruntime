@@ -1,18 +1,11 @@
 import onnx
-from onnxruntime.quantization import quantize_qat, QuantType
+from onnxruntime.quantization import quantize_dynamic, QuantType
  
-model_fp32 = "path/to/model.onnx"
-model_quant = "path/to/model.quant.onnx"
+model_fp32 = "./resnet_cifar10_single.onnx"
+model_quant = "./resnet_cifar10_single_int8.onnx"
  
 # 加载FP32模型
 onnx_model = onnx.load(model_fp32)
  
-# 进行量化
-quantized_model = quantize_qat(
-    model=onnx_model,
-    quantization_type=QuantType.QInt8,
-    force_fusions=True
-)
+quantize_dynamic(model_fp32,model_quant,weight_type=QuantType.QInt8)
  
-# 保存量化模型
-onnx.save_model(quantized_model, model_quant)
