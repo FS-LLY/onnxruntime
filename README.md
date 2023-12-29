@@ -70,6 +70,20 @@ python VGG16_onnx_test.py (VGG16 + celeba dataset)
 python resnet_onnx.py (Resnet18 + cifar-10)
 ```
 
+# Quantification (dynamic)
+
+Preprocess of your model first.
+
+```
+python -m onnxruntime.quantization.preprocess --input resnet_cifar10_single.onnx --output resnet_cifar10_single_infer.onnx
+```
+Then make a quantification on the model after preprocessing
+
+```
+python resnet_cifar10_quantize.py
+```
+The model could be directly used as original model, but be careful to the opset used.
+
 # Rasberry
 
 Buy a mini_HDMI - HDMI line: https://m.tb.cn/h.5ndT8Ir?tk=QkygWgtvV2O
@@ -135,13 +149,24 @@ export LD_LIBRARY_PATH=/data/ONNX/onnxruntime-linux-x64-gpu-1.12.0/lib:$LD_LIBRA
 
 ## Resnet (cifar-10)
 
+### Acc
 Official Dataset :81.96%
 
 onnxruntime_python: 81.96%
 
 onnxruntime_c++ :82.00% 
 
+onnxruntime_c++  (Quantification to Uint8) :81.92%
+
+### before quantification (float32 model)
+
 In Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) : 70.9374 s
 
 In Respberry Pi 5 (linux_Aarch64_v1.16.3) : 567.451s
+
+### Uint8 quantification （Uint8）
+
+In Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) : 123.814 s 
+
+
 
