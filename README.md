@@ -132,6 +132,10 @@ Just extract the package
 ```
 python cifar10.py
 ```
+### Cifar-100
+```
+python cifar100.py
+```
 ### celeba
 ```
 python celeba.py
