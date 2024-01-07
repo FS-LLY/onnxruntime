@@ -121,8 +121,7 @@ int main()
             // std::cout<< dim_count << std::endl;
 
             // 获取output的shape
-            int64_t dims[2];
-            shape_info.GetDimensions(dims, sizeof(dims) / sizeof(dims[0]));
+            std::vector<int64_t> dims = shape_info.GetShape();
             // std::cout<< dims[0] << "," << dims[1] << std::endl;
             // 取output数据
             float *f = output_tensor_.GetTensorMutableData<float>();

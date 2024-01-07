@@ -189,8 +189,9 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 lr, num_epochs = 0.01, 10
 train(net, optimizer, criterion, trainloader, testloader, num_epochs, lr, device)
 
+single_input_size = (1, 3, 224, 224)
 torch.onnx.export(net,                                # model being run
-                  torch.randn(128,3, 224, 224).to(device),    # model input (or a tuple for multiple inputs)
+                  torch.randn(*single_input_size).to(device),    # model input (or a tuple for multiple inputs)
                   "resnet_cifar100.onnx",           # where to save the model (can be a file or file-like object)
                   input_names = ['input'],              # the model's input names
                   output_names = ['output'])            # the model's output names
