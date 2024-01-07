@@ -132,8 +132,11 @@ Just extract the package
 ```
 python cifar10.py
 ```
-
-Updating other datasets ...
+### celeba
+```
+python celeba.py
+```
+Here it will export a file with a list of the test picture and the label (whether it's smiling)
 
 ## Compile
 ```
@@ -146,6 +149,29 @@ export LD_LIBRARY_PATH=/data/ONNX/onnxruntime-linux-x64-gpu-1.12.0/lib:$LD_LIBRA
 ./test
 ```
 # Result
+## VGG16 (celeba)
+### Acc
+Official Dataset : Not finished
+
+onnxruntime_python: Not finished
+
+onnxruntime_c++ :91.40% 
+
+onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : Not finished
+onnxruntime_c++ （Quantification to Uint8, In rasberry）: Not finished
+
+### Time consuming (1000 pictures)
+#### before quantification (float32 model)
+
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) : 42.5193 s
+
+On Respberry Pi 5 (linux_Aarch64_v1.16.3) : Not finished
+
+#### Uint8 quantification
+
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :  Not finished 
+
+On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
 ## Resnet (cifar-10)
 ### Acc
@@ -159,7 +185,7 @@ onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) :81.9
 
 onnxruntime_c++ （Quantification to Uint8, In rasberry）:82.00%
 
-### Time consuming
+### Time consuming (10000 pictures)
 #### before quantification (float32 model)
 
 On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) : 70.9374 s
@@ -171,6 +197,8 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 567.451s
 On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) : 123.814 s 
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 384.506 s
+
+
 
 
 
