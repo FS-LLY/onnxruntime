@@ -28,7 +28,7 @@ Output size: (1,10)
 ### cifar-100
 Train:
 ```
-python resnet_train_cifar100.py
+python resnet_train_cifar100_single.py
 ```
 Model input size: (128,3, 224, 224)
 
