@@ -30,9 +30,9 @@ Train:
 ```
 python resnet_train_cifar100_single.py
 ```
-Model input size: (128,3, 224, 224)
+Model input size: (1,3, 224, 224)
 
-Output size: (128,10)
+Output size: (1,10)
 
 ### catanddog
 Downloading data in feishu group chat.
@@ -200,13 +200,13 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 567.451s
 
 On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) : 123.814 s 
 
-## Resnet (cifar-10)
+## Resnet (cifar-100)
 ### Acc
 Official Dataset :56.75%
 
 onnxruntime_python: Not finished
 
-onnxruntime_c++ :Not finished
+onnxruntime_c++ : 54.78%
 
 onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) :Not finished
 
@@ -215,7 +215,7 @@ onnxruntime_c++ （Quantification to Uint8, In rasberry）:Not finished
 ### Time consuming (10000 pictures)
 #### before quantification (float32 model)
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) : Not finished
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) : 107.19 s 
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) : Not finished
 
