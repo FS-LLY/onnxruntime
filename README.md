@@ -206,7 +206,7 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 390.813s
 ### Acc
 Official Dataset :55.54%
 
-onnxruntime_python: Not finished
+onnxruntime_python: 56.78%
 
 onnxruntime_c++ : 54.78%
 
