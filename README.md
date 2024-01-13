@@ -204,7 +204,7 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 390.813s
 
 ## Resnet (cifar-100)
 ### Acc
-Official Dataset :56.75%
+Official Dataset :55.54%
 
 onnxruntime_python: Not finished
 
