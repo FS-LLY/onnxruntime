@@ -155,27 +155,28 @@ export LD_LIBRARY_PATH=/data/ONNX/onnxruntime-linux-x64-gpu-1.12.0/lib:$LD_LIBRA
 # Result
 ## VGG16 (celeba)
 ### Acc
-Official Dataset : Not finished
+Official Dataset : 89.62%
 
-onnxruntime_python: Not finished
+onnxruntime_python: 89.63%
 
 onnxruntime_c++ :91.40% 
 
-onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : Not finished
-onnxruntime_c++ （Quantification to Uint8, In rasberry）: Not finished
+onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : 91.3%
+
+onnxruntime_c++ （Quantification to Uint8, In rasberry）: 91.1%
 
 ### Time consuming (1000 pictures)
 #### before quantification (float32 model)
 
 On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) : 42.5193 s
 
-On Respberry Pi 5 (linux_Aarch64_v1.16.3) : Not finished
+On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 182.307s
 
 #### Uint8 quantification
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :  Not finished 
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :  28.751 s 
 
-On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
+On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  157.009%
 
 ## Resnet (cifar-10)
 ### Acc
@@ -210,21 +211,22 @@ onnxruntime_python: 56.78%
 
 onnxruntime_c++ : 54.78%
 
-onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) :Not finished
+onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : 54.67%
 
-onnxruntime_c++ （Quantification to Uint8, In rasberry）:Not finished
+onnxruntime_c++ （Quantification to Uint8, In rasberry）:54.75%
 
 ### Time consuming (10000 pictures)
 #### before quantification (float32 model)
 
 On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) : 107.19 s 
 
-On Respberry Pi 5 (linux_Aarch64_v1.16.3) : Not finished
+On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 547.394 s
 
 #### Uint8 quantification
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) : Not finished
-On Respberry Pi 5 (linux_Aarch64_v1.16.3) : Not finished
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) : 130.267 s
+
+On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 378.283 s
 
 
 
