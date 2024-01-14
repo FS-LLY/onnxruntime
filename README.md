@@ -174,9 +174,9 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 182.307s
 
 #### Uint8 quantification
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :  28.751 s 
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :  62.8612 s 
 
-On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  157.009%
+On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  157.009s
 
 ## Resnet (cifar-10)
 ### Acc
