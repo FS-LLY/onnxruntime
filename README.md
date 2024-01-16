@@ -182,7 +182,7 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  157.009s
 
 ## VGG16 (cifar-10)
 ### Acc
-Official Dataset : 89.62%
+Official Dataset : 68.62%
 
 onnxruntime_python: Not finished
 
