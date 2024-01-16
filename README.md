@@ -201,7 +201,7 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
 ## VGG16 (cifar-100)
 ### Acc
-Official Dataset : Not finished
+Official Dataset : 29.93%
 
 onnxruntime_python: Not finished
 
