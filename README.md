@@ -182,20 +182,26 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  157.009s
 
 ## VGG16 (cifar-10)
 ### Acc
-Official Dataset : 68.62%
+Official Dataset : 87.43%
 
-onnxruntime_python: Not finished
+onnxruntime_python: 85.89%
 
-onnxruntime_c++ :Not finished
+onnxruntime_c++ :86.06%
 
 onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : Not finished
 
 onnxruntime_c++ （Quantification to Uint8, In rasberry）: Not finished
 
-### Time consuming (1000 pictures)
+### Time consuming (10000 pictures)
 #### before quantification (float32 model)
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) :  Not finished
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :  25.375 s
+
+On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
+
+#### Uint8 quantification
+
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :   Not finished
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
@@ -215,6 +221,12 @@ onnxruntime_c++ （Quantification to Uint8, In rasberry）: Not finished
 #### before quantification (float32 model)
 
 On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) :  Not finished
+
+On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
+
+#### Uint8 quantification
+
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :   Not finished
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
