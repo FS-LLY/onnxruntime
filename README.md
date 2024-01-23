@@ -207,11 +207,11 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
 ## VGG16 (cifar-100)
 ### Acc
-Official Dataset : 29.93%
+Official Dataset : 63.79%
 
-onnxruntime_python: Not finished
+onnxruntime_python: 60.43%
 
-onnxruntime_c++ :Not finished
+onnxruntime_c++ : 59.36%
 
 onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : Not finished
 
