@@ -217,7 +217,7 @@ onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : 59.
 
 onnxruntime_c++ （Quantification to Uint8, In rasberry）: Not finished
 
-### Time consuming (1000 pictures)
+### Time consuming (10000 pictures)
 #### before quantification (float32 model)
 
 On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) :  24.1554 s
