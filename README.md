@@ -188,7 +188,7 @@ onnxruntime_python: 85.89%
 
 onnxruntime_c++ :86.06%
 
-onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : Not finished
+onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : 86.16%
 
 onnxruntime_c++ （Quantification to Uint8, In rasberry）: Not finished
 
@@ -201,7 +201,7 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
 #### Uint8 quantification
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :   Not finished
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :   34.5375 s 
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
@@ -213,20 +213,20 @@ onnxruntime_python: 60.43%
 
 onnxruntime_c++ : 59.36%
 
-onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : Not finished
+onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : 59.26%
 
 onnxruntime_c++ （Quantification to Uint8, In rasberry）: Not finished
 
 ### Time consuming (1000 pictures)
 #### before quantification (float32 model)
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) :  Not finished
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) :  24.1554 s
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
 #### Uint8 quantification
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :   Not finished
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :    33.7146 s 
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
