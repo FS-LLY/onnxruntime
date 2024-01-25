@@ -209,24 +209,24 @@ On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 ### Acc
 Official Dataset : 63.79%
 
-onnxruntime_python: 60.43%
+onnxruntime_python: 63.79%
 
-onnxruntime_c++ : 59.36%
+onnxruntime_c++ : 63.79%
 
-onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) : 59.26%
+onnxruntime_c++  (Quantification to Uint8, on Intel(R) Xeon(R) W-2265 CPU) :63.79%
 
 onnxruntime_c++ （Quantification to Uint8, In rasberry）: Not finished
 
 ### Time consuming (10000 pictures)
 #### before quantification (float32 model)
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) :  24.1554 s
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) :  25.7986 s 
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
 #### Uint8 quantification
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :    33.7146 s 
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :   32.9697 s 
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
