@@ -43,7 +43,7 @@ int main()
     for (const auto &entry : fs::directory_iterator(folderPath))
     {
         std::string imgPath = entry.path().string();
-        std::regex labelRegex("(\\d)_(\\d+).jpg");
+        std::regex labelRegex("(\\d+)_(\\d+).png");
         std::smatch match;
         if (std::regex_search(imgPath, match, labelRegex))
         {
@@ -75,7 +75,7 @@ int main()
             cv::Size dsize = cv::Size(224, 224);
             cv::Mat img_resized;
             cv::resize(img_f32, img_resized, dsize, 0, 0, cv::INTER_LINEAR);
-            //cv::cvtColor(img_resized, img_resized, cv::COLOR_BGR2RGB);
+            cv::cvtColor(img_resized, img_resized, cv::COLOR_BGR2RGB);
             // Calculate mean and standard deviation
             // Flatten and copy data to input_image_
             int channels = img_resized.channels();

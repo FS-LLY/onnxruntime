@@ -192,6 +192,6 @@ train(net, optimizer, criterion, trainloader, testloader, num_epochs, lr, device
 single_input_size = (1, 3, 224, 224)
 torch.onnx.export(net,                                # model being run
                   torch.randn(*single_input_size).to(device),    # model input (or a tuple for multiple inputs)
-                  "resnet_cifar100.onnx",           # where to save the model (can be a file or file-like object)
+                  "resnet_cifar100_single.onnx",           # where to save the model (can be a file or file-like object)
                   input_names = ['input'],              # the model's input names
                   output_names = ['output'])            # the model's output names

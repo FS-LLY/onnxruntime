@@ -38,7 +38,7 @@ def get_dataloaders_celeba(batch_size, num_workers=0,
     if test_transforms is None:
         test_transforms = transforms.ToTensor()
         
-    get_smile = lambda attr: attr[31:41]
+    get_smile = lambda attr: attr[31]
 
     train_dataset = datasets.CelebA(root='/dataset',
                                     split='train',
@@ -77,6 +77,30 @@ def get_dataloaders_celeba(batch_size, num_workers=0,
 
     return train_loader, valid_loader, test_loader
 
+class vgg16_conv_block(nn.Module):
+    def __init__(self, input_channels, out_channels, rate=0.4, drop=True):
+        super().__init__()
+        self.conv = nn.Conv2d(input_channels, out_channels, 3 ,1, 1)
+        self.bn = nn.BatchNorm2d(out_channels)
+        self.relu = nn.ReLU(inplace=True)
+        self.dropout = nn.Dropout(rate)
+        self.drop =drop
+    def forward(self, x):
+        x = self.relu(self.bn(self.conv(x)))
+        if self.drop:
+            x = self.dropout(x)
+        return(x)
+
+def vgg16_layer(input_channels, out_channels, num, dropout=[0.4, 0.4]):
+    result = []
+    result.append(vgg16_conv_block(input_channels, out_channels, dropout[0]))
+    for i in range(1, num-1):
+        result.append(vgg16_conv_block(out_channels, out_channels, dropout[1]))
+    if num>1:
+        result.append(vgg16_conv_block(out_channels, out_channels, drop=False))
+    result.append(nn.MaxPool2d(2,2))
+    return(result)
+
 
 
 
@@ -91,136 +115,11 @@ class VGG16(torch.nn.Module):
         # (w - k + 2*p)/s + 1 = o
         # => p = (s(o-1) - w + k)/2
         
-        self.block_1 = nn.Sequential(
-                nn.Conv2d(in_channels=3,
-                          out_channels=64,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          # (1(32-1)- 32 + 3)/2 = 1
-                          padding=1), 
-                nn.ReLU(),
-                nn.Conv2d(in_channels=64,
-                          out_channels=64,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),
-                nn.MaxPool2d(kernel_size=(2, 2),
-                             stride=(2, 2))
-        )
-        
-        self.block_2 = nn.Sequential(
-                nn.Conv2d(in_channels=64,
-                          out_channels=128,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),
-                nn.Conv2d(in_channels=128,
-                          out_channels=128,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),
-                nn.MaxPool2d(kernel_size=(2, 2),
-                             stride=(2, 2))
-        )
-        
-        self.block_3 = nn.Sequential(        
-                nn.Conv2d(in_channels=128,
-                          out_channels=256,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),
-                nn.Conv2d(in_channels=256,
-                          out_channels=256,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),        
-                nn.Conv2d(in_channels=256,
-                          out_channels=256,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),
-                nn.Conv2d(in_channels=256,
-                          out_channels=256,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),
-                nn.MaxPool2d(kernel_size=(2, 2),
-                             stride=(2, 2))
-        )
-        
-          
-        self.block_4 = nn.Sequential(   
-                nn.Conv2d(in_channels=256,
-                          out_channels=512,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),        
-                nn.Conv2d(in_channels=512,
-                          out_channels=512,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),        
-                nn.Conv2d(in_channels=512,
-                          out_channels=512,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),
-                nn.Conv2d(in_channels=512,
-                          out_channels=512,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),   
-                nn.MaxPool2d(kernel_size=(2, 2),
-                             stride=(2, 2))
-        )
-        
-        self.block_5 = nn.Sequential(
-                nn.Conv2d(in_channels=512,
-                          out_channels=512,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),            
-                nn.Conv2d(in_channels=512,
-                          out_channels=512,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),            
-                nn.Conv2d(in_channels=512,
-                          out_channels=512,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),
-                nn.Conv2d(in_channels=512,
-                          out_channels=512,
-                          kernel_size=(3, 3),
-                          stride=(1, 1),
-                          padding=1),
-                nn.ReLU(),   
-                nn.MaxPool2d(kernel_size=(2, 2),
-                             stride=(2, 2))             
-        )
-        
-        self.classifier = nn.Sequential(
-                nn.Linear(512*4*4, 4096),
-                nn.ReLU(),   
-                nn.Linear(4096, 4096),
-                nn.ReLU(),
-                nn.Linear(4096, num_classes)
-        )
+        b1 = nn.Sequential(*vgg16_layer(3,64,2,[0.3,0.4]), *vgg16_layer(64,128,2), *vgg16_layer(128,256,3), 
+                   *vgg16_layer(256,512,3),*vgg16_layer(512,512,3))
+        b2 = nn.Sequential(nn.Dropout(0.5), nn.Flatten(), nn.Linear(512, 512, bias=True), nn.BatchNorm1d(512), nn.ReLU(inplace=True), 
+                  nn.Linear(512,num_classes, bias=True))
+        self.net = nn.Sequential(b1, b2)
             
         
         for m in self.modules():
@@ -237,15 +136,8 @@ class VGG16(torch.nn.Module):
         
     def forward(self, x):
 
-        x = self.block_1(x)
-        x = self.block_2(x)
-        x = self.block_3(x)
-        x = self.block_4(x)
-        x = self.block_5(x)
-
-        logits = self.classifier(x.view(-1, 512*4*4))
+        logits = self.net(x)
         probas = F.softmax(logits, dim=1)
-
+        
+        
         return logits, probas
-
-    

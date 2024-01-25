@@ -2,6 +2,7 @@
 import cv2
 import numpy as np
 import os
+from PIL import Image
  
 def unpickle(file):
     import pickle
@@ -19,8 +20,10 @@ def main(cifar100_data_dir):
     for i in range(50000):
         img = np.reshape(data['data'][i], (3, 32, 32))
         img = img.transpose(1, 2, 0)
-        img_name = 'traindir/' + str(data['fine_labels'][i]) + '_' + str(i) + '.jpg'
-        cv2.imwrite(os.path.join(cifar100_data_dir, img_name), img)
+        img_name = 'traindir/' + str(data['fine_labels'][i]) + '_' + str(i) + '.png'
+        #cv2.imwrite(os.path.join(cifar100_data_dir, img_name), img)
+        img = Image.fromarray(img)
+        img.save(os.path.join(cifar100_data_dir, img_name))
  
     test_data_file = os.path.join(cifar100_data_dir, 'test') 
     print(test_data_file)
@@ -29,9 +32,10 @@ def main(cifar100_data_dir):
     for i in range(10000):
         img = np.reshape(data['data'][i], (3, 32, 32))
         img = img.transpose(1, 2, 0)
-        img_name = 'testdir/' + str(data['fine_labels'][i]) + '_' + str(i) + '.jpg'
-        cv2.imwrite(os.path.join(cifar100_data_dir, img_name), img)
- 
+        img_name = 'testdir/' + str(data['fine_labels'][i]) + '_' + str(i) + '.png'
+        #cv2.imwrite(os.path.join(cifar100_data_dir, img_name), img)
+        img = Image.fromarray(img)
+        img.save(os.path.join(cifar100_data_dir, img_name))
  
 if __name__ == "__main__":
     main('/dataset/cifar-100-python')
