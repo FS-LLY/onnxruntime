@@ -145,12 +145,12 @@ Here it will export a file with a list of the test picture and the label (whethe
 
 ## Compile
 ```
-g++ resnet_cifar10.cpp -o test  -I /data/ONNX/onnxruntime-linux-x64-gpu-1.12.0/include -L /data/ONNX/onnxruntime-linux-x64-gpu-1.12.0/lib  -L/usr/local/lib -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lonnxruntime -std=c++17
+g++ resnet_cifar10.cpp -o test  -I /data/ONNX/onnxruntime-linux-x64-gpu-1.16.3/include -L /data/ONNX/onnxruntime-linux-x64-gpu-1.16.3/lib  -L/usr/local/lib -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs -lonnxruntime -std=c++17
 ```
 
 ## Excute
 ```
-export LD_LIBRARY_PATH=/data/ONNX/onnxruntime-linux-x64-gpu-1.12.0/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/data/ONNX/onnxruntime-linux-x64-gpu-1.16.3/lib:$LD_LIBRARY_PATH
 ./test
 ```
 # Result
@@ -169,7 +169,7 @@ onnxruntime_c++ （Quantification to Uint8, In rasberry）: 91.1%
 ### Time consuming (1000 pictures)
 #### before quantification (float32 model)
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) : 42.5193 s
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) : 42.5193 s
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 182.307s
 
@@ -220,7 +220,7 @@ onnxruntime_c++ （Quantification to Uint8, In rasberry）: Not finished
 ### Time consuming (10000 pictures)
 #### before quantification (float32 model)
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) :  25.7986 s 
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :  25.7986 s 
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) :  Not finished
 
@@ -245,7 +245,7 @@ onnxruntime_c++ （Quantification to Uint8, In rasberry）:82.00%
 ### Time consuming (10000 pictures)
 #### before quantification (float32 model)
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) :  54.4086 s
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) :  54.4086 s
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 567.451s
 
@@ -270,7 +270,7 @@ onnxruntime_c++ （Quantification to Uint8, In rasberry）:54.75%
 ### Time consuming (10000 pictures)
 #### before quantification (float32 model)
 
-On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.12.0) : 54.9864 s 
+On Intel(R) Xeon(R) W-2265 CPU @ 3.50GHz (linux_x64_gpu_v1.16.3) : 54.9864 s 
 
 On Respberry Pi 5 (linux_Aarch64_v1.16.3) : 547.394 s
 
