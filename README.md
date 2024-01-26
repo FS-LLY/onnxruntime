@@ -15,6 +15,24 @@ Model input size: (128,3, 128, 128)
 
 Output size: (128,2)
 
+### cifar-10
+Train:
+```
+python VGG16_cifar10.py
+```
+Model input size: (1,3, 32, 32)
+
+Output size: (1,10)
+
+### cifar-10
+Train:
+```
+python VGG16_cifar100.py
+```
+Model input size: (1,3, 32, 32)
+
+Output size: (1,100)
+
 ## Resnet 
 Need: resnet_model.py  and corresponding .py file for different dataset
 
@@ -73,7 +91,7 @@ python resnet_onnx.py (Resnet18 + cifar-10)
 
 # Quantification (dynamic)
 
-Preprocess of your model first.
+Preprocess of your model first. (Use resnet & cifar10 as example)
 
 ```
 python -m onnxruntime.quantization.preprocess --input resnet_cifar10_single.onnx --output resnet_cifar10_single_infer.onnx
