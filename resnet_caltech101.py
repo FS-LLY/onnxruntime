@@ -6,6 +6,10 @@ import torchvision
 import torchvision.transforms as transforms
 import torch.optim as optim
 
+from dataset import CaltechDataset
+
+
+
 class Residual(nn.Module):
     def __init__(self, input_channels, num_channels, use_1x1conv=False, strides=1):
         super().__init__()
@@ -48,8 +52,18 @@ b5 = nn.Sequential(*resnet_block(256, 512, 2))
 
 net = nn.Sequential(b1, b2, b3, b4, b5,
                    nn.AdaptiveAvgPool2d((1, 1)),
-                   nn.Flatten(), nn.Linear(512, 103))
+                   nn.Flatten(), nn.Linear(512, 101))
 
+num_features = 224*224
+num_classes = 2
+
+random_seed = 1
+learning_rate = 0.001
+num_epochs = 1
+
+torch.manual_seed(random_seed)
+
+ 
 def accuracy(y_hat, y):
     """计算预测正确的数量"""
     if len(y_hat.shape) > 1 and y_hat.shape[1] > 1:
@@ -122,12 +136,14 @@ def evaluate_accuracy_gpu(net, data_iter, device=None): #@save
 #     print(f'{metric[2] * num_epochs / timer.sum():.1f} examples/sec '
 #           f'on {str(device)}')
 
-def train(net, optimizer, loss, train_iter, test_iter, num_epochs, lr, device):
+def train(net, optimizer, loss, train_iter,vaild_iter, test_iter, num_epochs, lr, device):
     """用GPU训练模型"""
     def init_weights(m):
         if type(m) == nn.Linear or type(m) == nn.Conv2d:
             nn.init.xavier_uniform_(m.weight)
     net.apply(init_weights)
+    lr_scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer=optimizer,base_lr=1e-5,max_lr=0.01,cycle_momentum=False,
+                                                      step_size_up=10,step_size_down=10,mode="exp_range",gamma=0.97)
     print('training on', device)
     net.to(device)
     for epoch in range(num_epochs):
@@ -138,6 +154,8 @@ def train(net, optimizer, loss, train_iter, test_iter, num_epochs, lr, device):
         for i, (X, y) in enumerate(train_iter_with_progress):
             optimizer.zero_grad()
             X, y = X.to(device), y.to(device)
+            #print(X.shape)
+            #print(y.shape)
             y_hat = net(X)
             l = loss(y_hat, y)
             l.backward()
@@ -147,50 +165,83 @@ def train(net, optimizer, loss, train_iter, test_iter, num_epochs, lr, device):
             train_iter_with_progress.set_description(f"Epoch {epoch+1}/{num_epochs}")  # 更新进度条的描述
         train_l = metric[0] / metric[2]
         train_acc = metric[1] / metric[2]
-        test_acc = evaluate_accuracy_gpu(net, test_iter)
+        test_acc = evaluate_accuracy_gpu(net, vaild_iter)
+        lr_scheduler.step()
         print("train loss:", train_l)
         print("train acc:", train_acc)
-        print("test acc:", test_acc)
+        print("vaild acc:", test_acc)
+    
+    test_acc = evaluate_accuracy_gpu(net, test_iter)
+    print("test acc:", test_acc)
 
 
 
 transform = transforms.Compose(
     [transforms.ToTensor(),
-     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-     transforms.Resize([224,224], antialias=True)])
+     transforms.Resize(224, antialias=True)])
+
+transform_train = transforms.Compose(
+    [transforms.RandomRotation(30),
+     transforms.RandomAffine(degrees=15, translate=(0.1,0.1)),
+       transforms.RandomHorizontalFlip(),
+     transforms.ToTensor(),
+     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]) # 均值，标准差
+
+    ])
+
+transform_test = transforms.Compose(
+    [
+    transforms.ToTensor(),
+     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+     ])
 
 batch_size = 128
 
 #trainset = torchvision.datasets.CIFAR10(root='/dataset', train=True,
 #                                        download=True, transform=transform)
-trainset = torchvision.datasets.Flowers102(root='/dataset', split="test",
-                                    download=True, transform=transform)
+#trainset = torchvision.datasets.CIFAR10(root='/dataset', train=True,
+#                                    download=True, transform=transform)
 
+#trainset = torchvision.datasets.SVHN("/dataset","train",transform_train,None,True)
+
+#trainset = torchvision.datasets.STL10("/dataset",'train', transform=transform_test,target_transform= None, download=True)
+
+trainset = CaltechDataset(train=True,large=True,transform=transform_train)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
                                           shuffle=True, num_workers=8)
 
-#testset = torchvision.datasets.CIFAR10(root='/dataset', train=False,
-#                                       download=True, transform=transform)
-testset = torchvision.datasets.Flowers102(root='/dataset',  split="train",
-                                       download=True, transform=transform)
-testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
+vaildset = CaltechDataset(train=False,large=True,transform=transform_test)
+vaildloader = torch.utils.data.DataLoader(vaildset, batch_size=batch_size,
                                          shuffle=False, num_workers=8)
 
-classes = ('plane', 'car', 'bird', 'cat',
-           'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+#testset = torchvision.datasets.CIFAR10(root='/dataset', train=False,
+#                                       download=True, transform=transform)
+#testset = torchvision.datasets.CIFAR10(root='/dataset', train=False,
+#                                       download=True, transform=transform)
+#testset = torchvision.datasets.SVHN("/dataset","test",transform_test,None,True)
+
+#testset = torchvision.datasets.STL10("/dataset","test", transform=transform_test,target_transform= None, download=True)
+
+testset = CaltechDataset(train=False,large=True,transform=transform_test)
+testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
+                                         shuffle=False, num_workers=8)
 
 
 #torch.backends.cudnn.enabled = False
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
+optimizer = optim.Adam([{'params':net.parameters(),'initial_lr': 1e-3}], lr=0.01,weight_decay=0.001)
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-lr, num_epochs = 0.01, 40
-train(net, optimizer, criterion, trainloader, testloader, num_epochs, lr, device)
+lr, num_epochs = 0.01, 100
+train(net, optimizer, criterion, trainloader, vaildloader, testloader, num_epochs, lr, device)
 
-torch.onnx.export(net,                                # model being run
-                  torch.randn(128,3, 224, 224).to(device),    # model input (or a tuple for multiple inputs)
-                  "resnet_102flower.onnx",           # where to save the model (can be a file or file-like object)
-                  input_names = ['input'],              # the model's input names
-                  output_names = ['output'])            # the model's output names
+# 定义单张图片的输入大小
+single_input_size = (1, 3, 224, 224)
+
+# 导出为ONNX文件
+torch.onnx.export(net,
+                  torch.randn(*single_input_size).to(device),
+                  "../resnet_Caltech101_single.onnx",
+                  input_names=['input'],
+                  output_names=['output'])

@@ -5,7 +5,7 @@ from tqdm import tqdm
 import torchvision
 import torchvision.transforms as transforms
 import torch.optim as optim
-from model import VGG16
+from VGG16_model import VGG16
 
 class Residual(nn.Module):
     def __init__(self, input_channels, num_channels, use_1x1conv=False, strides=1):

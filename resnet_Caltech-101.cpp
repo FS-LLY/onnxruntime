@@ -12,7 +12,7 @@ using namespace std::chrono;
 int main()
 {
     Ort::Env env;
-    std::string weightFile = "../resnet_cifar10_single.onnx";
+    std::string weightFile = "../resnet_Caltech101_single.onnx";
 
     Ort::SessionOptions session_options;
     OrtCUDAProviderOptions options;
@@ -23,6 +23,7 @@ int main()
     options.cudnn_conv_algo_search = OrtCudnnConvAlgoSearch::OrtCudnnConvAlgoSearchExhaustive;
     options.do_copy_in_default_stream = 1;
     session_options.AppendExecutionProvider_CUDA(options);
+    //std::cout<<"here"<<std::endl;
     Ort::Session session_{env, weightFile.c_str(), Ort::SessionOptions{nullptr}}; // CPU
     // Ort::Session session_{env, weightFile.c_str(), session_options}; //GPU
 
@@ -32,37 +33,39 @@ int main()
     std::array<int64_t, 4> input_shape_{1, 3, height_, width_}; // NCHW, 1x3xHxW
 
     Ort::Value output_tensor_{nullptr};
-    std::array<int64_t, 2> output_shape_{1, 10}; // 模型output shape，此处假设是二维的(1,10)
+    std::array<int64_t, 2> output_shape_{1, 101}; // 模型output shape，此处假设是二维的(1,10)
 
     std::array<float, width_ * height_ * 3> input_image_{}; // 输入图片，HWC
-    std::array<float, 10> results_{};                       // 模型输出，注意和output_shape_对应
-    std::string folderPath = "/dataset/cifar-10-batches-py/test/";
+    std::array<float, 101> results_{};                       // 模型输出，注意和output_shape_对应
+    std::string folderPath = "/dataset/caltech-101/224_224/test";
     int num = 0;
     int correct_num = 0;
     auto start = system_clock::now();
     for (const auto &entry : fs::directory_iterator(folderPath))
     {
         std::string imgPath = entry.path().string();
+        //std::cout<<imgPath<<std::endl;
         std::regex labelRegex("(\\d+)_(\\d+).png");
         std::smatch match;
         if (std::regex_search(imgPath, match, labelRegex))
         {
             // match[1] 匹配 x，match[2] 匹配 yyyy
-            std::string labelStr = match[1];
-            std::string imageNumberStr = match[2];
+            std::string labelStr = match[2];
+            std::string imageNumberStr = match[1];
             // std::cout<<match[1]<<std::endl;
             int label = std::stoi(labelStr);
             int imageNumber = std::stoi(imageNumberStr);
             // int label = 0;
             // std::cin>>label;
             /*
-            if(imageNumber!=8870){
+            if(imageNumber!=3015){
                 continue;
             }
             */
             num++;
             // 读取图像
             cv::Mat img = cv::imread(imgPath,-1);
+            //std::cout<<img.channels()<<std::endl;
             auto memory_info = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
             input_tensor_ = Ort::Value::CreateTensor<float>(memory_info, input_image_.data(), input_image_.size(), input_shape_.data(), input_shape_.size());
             output_tensor_ = Ort::Value::CreateTensor<float>(memory_info, results_.data(), results_.size(), output_shape_.data(), output_shape_.size());
@@ -70,17 +73,15 @@ int main()
             const char *output_names[] = {"output"}; // 输出节点名
             // 预处理
             cv::Mat img_f32;
-            img.convertTo(img_f32, CV_32FC3, 1.0 / 255.0);
+            
+            img.convertTo(img_f32, CV_32FC3,1.0 / 255.0);
             //img_f64.convertTo(img_f64, CV_64FC3, 1.0 / 255.0);
-            cv::Size dsize = cv::Size(224, 224);
-            cv::Mat img_resized;
-            cv::resize(img_f32, img_resized, dsize, 0, 0, cv::INTER_LINEAR);
-            cv::cvtColor(img_resized, img_resized, cv::COLOR_BGR2RGB);
+            cv::cvtColor(img_f32, img_f32, cv::COLOR_BGR2RGB);
             // Calculate mean and standard deviation
             // Flatten and copy data to input_image_
-            int channels = img_resized.channels();
-            int height = img_resized.rows;
-            int width = img_resized.cols;
+            int channels =  img_f32.channels();
+            int height = img_f32.rows;
+            int width = img_f32.cols;
 
             // Calculate mean and standard deviation
             //cv::Scalar mean, stddev;
@@ -90,9 +91,9 @@ int main()
             //cv::subtract(img_resized, mean, img_normalized);
             //cv::divide(img_normalized, stddev, img_normalized);
             cv::Mat img_data;
-            img_data = img_resized;
-            float mean[3] = {0.5, 0.5, 0.5};
-            float stddev[3] = {0.5, 0.5, 0.5};
+            img_data = img_f32;
+            float mean[3] = {0.485, 0.456, 0.406} ;
+            float stddev[3] = {0.229, 0.224, 0.225};
 
             for (int c = 0; c < channels; ++c)
             {
@@ -102,14 +103,15 @@ int main()
                     for (int w = 0; w < width; ++w)
                     {
                         int index = c * height * width + h * width + w;
-                        //std::cout<<img_data.at<cv::Vec3f>(h, w)[c]<<" ";
+                        //std::cout<<img_data.at<cv::Vec6f>(h, w)[c]<<" ";
                         input_image_[index] = (img_data.at<cv::Vec3f>(h, w)[c] - mean[c]) / stddev[c];
-                        //std::cout<<input_image_[index]<<std::endl;
+                        //std::cout<<input_image_[index]<<" ";
                         //std::cin>>a;
                     }
                     //std::cout<<std::endl;
                 }
             }
+            //break;
             //std::copy(img_data.begin(), img_data.end(), input_image_.data());
             session_.Run(Ort::RunOptions{nullptr}, input_names, &input_tensor_, 1, output_names, &output_tensor_, 1);
 

@@ -7,14 +7,16 @@ import torchvision.transforms as transforms
 import torch.optim as optim
 from VGG16_model import VGG16
 import time
+from dataset import CaltechDataset
+
 
 # 图像增强
 num_features = 32*32
-num_classes = 10
+num_classes = 101
 batch_size = 128
 random_seed = 1
-learning_rate = 0.005
-num_epochs = 30
+learning_rate = 0.001
+num_epochs = 250
 
 torch.manual_seed(random_seed)
 model = VGG16(num_features=num_features,
@@ -22,45 +24,37 @@ model = VGG16(num_features=num_features,
 torch.cuda.empty_cache()
 torch.cuda.max_split_size_mb = 140
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate) 
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate,weight_decay=0.001) 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 model = model.to(device)
-lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=10,gamma=0.5,last_epoch=-1)
-
+lr_scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer=optimizer,base_lr=1e-5,max_lr=0.01,cycle_momentum=False,
+                                                      step_size_up=10,step_size_down=10,mode="exp_range",gamma=0.97)
 transform_train = transforms.Compose(
-    [transforms.ToTensor(),
-     transforms.Resize([32,32],transforms.InterpolationMode.NEAREST),
-     transforms.RandomHorizontalFlip(p=0.5), 
-     #transforms.Normalize((0.1307), (0.3081)),
-    transforms.RandomAffine(degrees=15, translate=(0.1,0.1)),
-    
-     
+    [transforms.RandomRotation(30),
+     transforms.RandomAffine(degrees=15, translate=(0.1,0.1)),
+       transforms.RandomHorizontalFlip(),
+     transforms.ToTensor(),
+     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]) # 均值，标准差
+
     ])
 
 transform_test = transforms.Compose(
-    [transforms.ToTensor(),
-     transforms.Resize([32,32],transforms.InterpolationMode.NEAREST),
+    [
+    transforms.ToTensor(),
+     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
      ])
-
 
 #trainset = torchvision.datasets.CIFAR10(root='/dataset', train=True,
 #                                    download=True, transform=transform_train)
-trainset = torchvision.datasets.FashionMNIST("/dataset","train",transform_train,None,True)
-
-
+trainset = CaltechDataset(train=True,large=False,transform=transform_train)
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size,
                                           shuffle=True, num_workers=8)
 
-#validset = torchvision.datasets.CIFAR10(root='/dataset', train=False,
-#                                        download=False, transform=transform_test)
-vaildset = torchvision.datasets.FashionMNIST("/dataset","test",transform_test,None,True)
+vaildset = CaltechDataset(train=False,large=False,transform=transform_test)
 vaildloader = torch.utils.data.DataLoader(vaildset, batch_size=batch_size,
                                          shuffle=False, num_workers=8)
 
-#testset = torchvision.datasets.CIFAR10(root='/dataset', train=False,
-#                                       download=True, transform=transform_test)
-testset = torchvision.datasets.FashionMNIST("/dataset","test",transform_test,None,True)
-
+testset = CaltechDataset(train=False,large=False,transform=transform_test)
 testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
                                          shuffle=False, num_workers=8)
 
@@ -128,12 +122,12 @@ with torch.set_grad_enabled(False): # save memory during inference
     print('Test accuracy: %.2f%%' % (compute_accuracy(model, testloader)))
 
 # 定义单张图片的输入大小
-single_input_size = (1, 1, 32, 32)
+single_input_size = (1, 3, 32, 32)
 
 # 导出为ONNX文件
 torch.onnx.export(model,
                   torch.randn(*single_input_size).to(device),
-                  "../VGG16_FashionMNIST_single.onnx",
+                  "../VGG16_Caltech101_single.onnx",
                   input_names=['input'],
                   output_names=['output'])
 

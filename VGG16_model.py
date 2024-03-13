@@ -141,3 +141,40 @@ class VGG16(torch.nn.Module):
         
         
         return logits, probas
+    
+
+class VGG16_large(torch.nn.Module):
+
+    def __init__(self, num_features, num_classes):
+        super(VGG16_large, self).__init__()
+        
+        # calculate same padding:
+        # (w - k + 2*p)/s + 1 = o
+        # => p = (s(o-1) - w + k)/2
+        
+        b1 = nn.Sequential(*vgg16_layer(3,64,2,[0.3,0.4]), *vgg16_layer(64,128,2), *vgg16_layer(128,256,3), 
+                   *vgg16_layer(256,512,3),*vgg16_layer(512,512,3))
+        b2 = nn.Sequential(nn.Dropout(0.5), nn.Flatten(), nn.Linear(512*7*7, 4096, bias=True), nn.BatchNorm1d(512), nn.ReLU(inplace=True), 
+                  nn.Linear(4096,num_classes, bias=True))
+        self.net = nn.Sequential(b1, b2)
+            
+        
+        for m in self.modules():
+            if isinstance(m, torch.nn.Conv2d):
+                #n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+                #m.weight.data.normal_(0, np.sqrt(2. / n))
+                m.weight.detach().normal_(0, 0.05)
+                if m.bias is not None:
+                    m.bias.detach().zero_()
+            elif isinstance(m, torch.nn.Linear):
+                m.weight.detach().normal_(0, 0.05)
+                m.bias.detach().detach().zero_()
+        
+        
+    def forward(self, x):
+
+        logits = self.net(x)
+        probas = F.softmax(logits, dim=1)
+        
+        
+        return logits, probas

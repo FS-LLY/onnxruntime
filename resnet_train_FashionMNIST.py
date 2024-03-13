@@ -5,7 +5,6 @@ from tqdm import tqdm
 import torchvision
 import torchvision.transforms as transforms
 import torch.optim as optim
-from model import VGG16
 
 class Residual(nn.Module):
     def __init__(self, input_channels, num_channels, use_1x1conv=False, strides=1):
@@ -59,8 +58,7 @@ learning_rate = 0.001
 num_epochs = 1
 
 torch.manual_seed(random_seed)
-model = VGG16(num_features=num_features,
-              num_classes=num_classes)
+
  
 def accuracy(y_hat, y):
     """计算预测正确的数量"""
@@ -172,21 +170,18 @@ def train(net, optimizer, loss, train_iter, test_iter, num_epochs, lr, device):
 
 transform = transforms.Compose(
     [transforms.ToTensor(),
-     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
      transforms.Resize(224, antialias=True)])
 
 transform_train = transforms.Compose(
     [transforms.ToTensor(),
+     transforms.Resize(224, transforms.InterpolationMode.NEAREST),
      transforms.RandomHorizontalFlip(p=0.5), 
     transforms.RandomAffine(degrees=15, translate=(0.1,0.1)),
-     transforms.Normalize((0.1307), (0.3081)),
-     transforms.Resize(224, antialias=True)
     ])
 
 transform_test = transforms.Compose(
     [transforms.ToTensor(),
-     transforms.Normalize((0.1307), (0.3081)),
-     transforms.Resize(224, antialias=True)
+     transforms.Resize(224, transforms.InterpolationMode.NEAREST)
      ])
 
 batch_size = 128
@@ -234,7 +229,7 @@ single_input_size = (1, 1, 224, 224)
 # 导出为ONNX文件
 torch.onnx.export(net,
                   torch.randn(*single_input_size).to(device),
-                  "resnet_FASHIONMNIST_single.onnx",
+                  "../resnet_FashionMNIST_single.onnx",
                   input_names=['input'],
                   output_names=['output'])
 
