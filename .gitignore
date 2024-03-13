@@ -1,3 +1,4 @@
 *.txt
 !CMakeLists.txt
 test
+__pycache__
